@@ -1,0 +1,3 @@
+use react-challenge
+db
+db.users.insert({"password":"$2a$10$nekkR8/R3LJLiepg7W/W5.uZ3VqQuAI8lju/DbymhvwuaBUf30yWS","loginId":"dmalvasi"})

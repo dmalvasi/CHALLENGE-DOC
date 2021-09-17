@@ -1,0 +1,358 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DM-System/Cursos/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: http://localhost:3901/api
+info:
+  description: Sistema de Cursos
+  version: "1.0.0"
+  title: CHALLENGE
+  contact:
+    email: diego.malvasi81@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /cursos:
+    get:
+      tags:
+        - cursos
+      summary: Obtiene todos los cursos
+      operationId: Obtener Cursos
+      description: Obtiene todos los cursos.
+      responses:
+        '200':
+          description: devuelve todos los curso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Curso'
+        '404':
+          description: 'No se encontro el recurso'
+        '500':
+          description: 'Error interno'
+  /curso/{cursoId}:
+    get:
+      tags:
+        - cursos
+      summary: Obtiene un curso segun el id
+      operationId: Obtener Curso
+      description: Obtiene un curso segun el Id pasado como parametro. El id es un ObjectId de mongodb
+      parameters:
+        - in: path
+          name: cursoId
+          description: Id del curso.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: devuelve un curso segun criterio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+        '400':
+          description: 'parametro no valido'
+        '404':
+          description: 'No se encontro el recurso'
+        '500':
+          description: 'Error interno'          
+  /curso:
+    post:
+      summary: adds an inventory item
+      operationId: Curso crear
+      description: Adds an item to the system
+      tags:
+        - cursos
+      requestBody:
+        description: 'Se requiere el curso a dar de alta'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curso'
+      responses:
+        '200':
+          description: 'Curso creado.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+        '400':
+          description: 'parametros o formato no validos'
+        '404':
+          description: 'Problemas al guardar el curso'
+        '500':
+          description: 'Eror interno'
+  /getCursoByYearAndDuration/{year}/{duration}:
+    get:
+      tags:
+        - cursos
+      summary: 'btiene cursos segun paramtros de año y duracion'
+      operationId: 'Obtener Curso por año y duracion'
+      description: ''
+      parameters:
+        - in: path
+          name: year
+          description: 'Nro de año que se dicto el curso. [El maximo es el año actual]'
+          required: true
+          schema:
+            type: number
+            minimum: 2000
+            maximum: 2021
+        - in: path
+          name: duration
+          description: 'Duracion del curso dictado'
+          required: true
+          schema:
+            type: number
+            minimum: 1
+            maximum: 300
+      responses:
+        '200':
+          description: 'devuelve un curso segun criterio'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Curso'
+        '400':
+          description: 'parametro no valido'
+        '404':
+          description: 'No se encontro el recurso'
+        '500':
+          description: 'Error interno'
+  /curso/addAlumno/{cursoId}:     
+    post:
+      summary: 'Asocia alumno al curso.'
+      operationId: 'Asocia Alumno a Curso'
+      description: 'Crea una asociacion de un alumno a un curso'
+      tags:
+        - cursos
+      parameters:
+        - in: path
+          name: cursoId
+          description: Id del curso.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alumnoId:
+                  type: string
+                  description: 'Id de alumno a agregar' 
+      responses:
+        '200':
+          description: 'El alumno fue asociado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursoAlumno'
+        '400':
+          description: 'Parametros o formato invalido. Asociacion de Curso-Alumno ya existente.'
+        '404':
+          description: 'Problemas al crear la asociacion'
+        '500':
+          description: 'error interno'
+  /curso/deleteAlumno/{cursoId}:     
+    put:
+      summary: 'Elimina asociacion de alumno al curso.'
+      operationId: 'Elimina Asociacion Alumno a Curso'
+      description: 'Elimina la asociacion de un alumno a un curso'
+      tags:
+        - cursos
+      parameters:
+        - in: path
+          name: cursoId
+          description: Id del curso.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alumnoId:
+                  type: string
+                  description: 'Id de alumno a agregar' 
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  cursoId:
+                    type: string
+                  alumnoId:
+                    type: string
+        '400':
+          description: 'Parametros o formato invalido. Asociacion de Curso-Alumno ya existente.'
+        '404':
+          description: 'Problemas al crear la asociacion'
+        '500':
+          description: 'error interno'
+
+
+  /alumno/{alumnoId}:
+    get:
+      tags:
+        - alumnos
+      summary: Obtiene un alumno segun el id
+      operationId: Obtener Alumno
+      description: Obtiene un alumno segun el Id pasado como parametro. El id es un ObjectId de mongodb
+      parameters:
+        - in: path
+          name: alumnoId
+          description: Id del alumno.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'devuelve un alumno segun criterio'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+        '400':
+          description: 'parametro no valido, no se encontro curso.'
+  /alumno:
+    post:
+      tags:
+        - alumnos
+      summary: 'Crea un nuevo alumno'
+      operationId: 'Curso Alumno'
+      description: 'Agrega un nuevo alumno, valida por numero de DNI'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curso'
+        description: Inventory item to add
+      responses:
+        '200':
+          description: El alumno fue creado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+        '400':
+          description: 'El alumno no se ha guardado correctamente'
+        '500':
+          description: 'Error guardado de Alumno'
+      
+  
+  / user/register:
+    post:
+      tags:
+        - alumnos
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: Inventory item to add
+      summary: 'Crea usuario'
+      operationId: 'Crea Usuario'
+      description: 'Crea un nuevo usuario.'
+      responses:
+        '200':
+          description: El alumno fue creado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 'El alumno no se ha guardado correctamente'
+        '500':
+          description: 'Error guardado de Alumno'
+
+  
+components:
+  schemas:
+    User:
+      description: 'usuario de sistema.'
+      type: object
+      required: [loginId,password,name,surename,email]
+      properties:
+        loginId:
+          type: string
+        password:
+          type: string
+        name: 
+          type: string
+        surename: 
+          type: string
+        email: 
+          type: string
+        getHash:
+          type: boolean
+    Curso:
+      description: 'Representa un curso.'
+      type: object
+      required: [tema,anioDictado,duracion]
+      properties:
+        id:
+          type: string
+        tema:
+          type: string
+        descripcion: 
+          type: string
+        anioDictado: 
+          type: integer
+          format: int64
+          #example: 2021
+        duracion: 
+          type: integer
+    CursoAlumno:
+      description: 'Registro asociacion alumno-curso'
+      type: object
+      required: [cursoId,_id,alumnoId,nombre, nota]
+      properties:
+        cursoId:
+          type: string
+        alumno:
+          type: object
+          properties:    
+            alumnoId:
+              type: string
+            nombre: 
+              type: string
+              description: 'Nombre en formato nombre, apellido'
+            nota: 
+              type: integer
+              format: int32
+    Alumno:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        apellido: 
+          type: string
+        dni: 
+          type: integer
+          format: int64
+        direccion: 
+          type: string

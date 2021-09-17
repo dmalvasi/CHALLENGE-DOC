@@ -1,0 +1,582 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CHALLENGE",
+    "description": "Sistema de Cursos",
+    "contact": {
+      "email": "diego.malvasi81@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/DM-System/Cursos/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    },
+    {
+      "url": "http://localhost:3901/api",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/cursos": {
+      "get": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "Obtiene todos los cursos",
+        "description": "Obtiene todos los cursos.",
+        "operationId": "Obtener Cursos",
+        "responses": {
+          "200": {
+            "description": "devuelve todos los curso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Curso"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontro el recurso"
+          },
+          "500": {
+            "description": "Error interno"
+          }
+        }
+      }
+    },
+    "/curso/{cursoId}": {
+      "get": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "Obtiene un curso segun el id",
+        "description": "Obtiene un curso segun el Id pasado como parametro. El id es un ObjectId de mongodb",
+        "operationId": "Obtener Curso",
+        "parameters": [
+          {
+            "name": "cursoId",
+            "in": "path",
+            "description": "Id del curso.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "devuelve un curso segun criterio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Curso"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "parametro no valido"
+          },
+          "404": {
+            "description": "No se encontro el recurso"
+          },
+          "500": {
+            "description": "Error interno"
+          }
+        }
+      }
+    },
+    "/curso": {
+      "post": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "adds an inventory item",
+        "description": "Adds an item to the system",
+        "operationId": "Curso crear",
+        "requestBody": {
+          "description": "Se requiere el curso a dar de alta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Curso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Curso creado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Curso"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "parametros o formato no validos"
+          },
+          "404": {
+            "description": "Problemas al guardar el curso"
+          },
+          "500": {
+            "description": "Eror interno"
+          }
+        }
+      }
+    },
+    "/getCursoByYearAndDuration/{year}/{duration}": {
+      "get": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "btiene cursos segun paramtros de año y duracion",
+        "operationId": "Obtener Curso por año y duracion",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "description": "Nro de año que se dicto el curso. [El maximo es el año actual]",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "maximum": 2021,
+              "minimum": 2000,
+              "type": "number"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "path",
+            "description": "Duracion del curso dictado",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "maximum": 300,
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "devuelve un curso segun criterio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Curso"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "parametro no valido"
+          },
+          "404": {
+            "description": "No se encontro el recurso"
+          },
+          "500": {
+            "description": "Error interno"
+          }
+        }
+      }
+    },
+    "/curso/addAlumno/{cursoId}": {
+      "post": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "Asocia alumno al curso.",
+        "description": "Crea una asociacion de un alumno a un curso",
+        "operationId": "Asocia Alumno a Curso",
+        "parameters": [
+          {
+            "name": "cursoId",
+            "in": "path",
+            "description": "Id del curso.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addAlumno_cursoId_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "El alumno fue asociado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CursoAlumno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametros o formato invalido. Asociacion de Curso-Alumno ya existente."
+          },
+          "404": {
+            "description": "Problemas al crear la asociacion"
+          },
+          "500": {
+            "description": "error interno"
+          }
+        }
+      }
+    },
+    "/curso/deleteAlumno/{cursoId}": {
+      "put": {
+        "tags": [
+          "cursos"
+        ],
+        "summary": "Elimina asociacion de alumno al curso.",
+        "description": "Elimina la asociacion de un alumno a un curso",
+        "operationId": "Elimina Asociacion Alumno a Curso",
+        "parameters": [
+          {
+            "name": "cursoId",
+            "in": "path",
+            "description": "Id del curso.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deleteAlumno_cursoId_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametros o formato invalido. Asociacion de Curso-Alumno ya existente."
+          },
+          "404": {
+            "description": "Problemas al crear la asociacion"
+          },
+          "500": {
+            "description": "error interno"
+          }
+        }
+      }
+    },
+    "/alumno/{alumnoId}": {
+      "get": {
+        "tags": [
+          "alumnos"
+        ],
+        "summary": "Obtiene un alumno segun el id",
+        "description": "Obtiene un alumno segun el Id pasado como parametro. El id es un ObjectId de mongodb",
+        "operationId": "Obtener Alumno",
+        "parameters": [
+          {
+            "name": "alumnoId",
+            "in": "path",
+            "description": "Id del alumno.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "devuelve un alumno segun criterio",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Alumno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "parametro no valido, no se encontro curso."
+          }
+        }
+      }
+    },
+    "/alumno": {
+      "post": {
+        "tags": [
+          "alumnos"
+        ],
+        "summary": "Crea un nuevo alumno",
+        "description": "Agrega un nuevo alumno, valida por numero de DNI",
+        "operationId": "Curso Alumno",
+        "requestBody": {
+          "description": "Inventory item to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Curso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "El alumno fue creado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Alumno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "El alumno no se ha guardado correctamente"
+          },
+          "500": {
+            "description": "Error guardado de Alumno"
+          }
+        }
+      }
+    },
+    "/ user/register": {
+      "post": {
+        "tags": [
+          "alumnos"
+        ],
+        "summary": "Crea usuario",
+        "description": "Crea un nuevo usuario.",
+        "operationId": "Crea Usuario",
+        "requestBody": {
+          "description": "Inventory item to add",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "El alumno fue creado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "El alumno no se ha guardado correctamente"
+          },
+          "500": {
+            "description": "Error guardado de Alumno"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "required": [
+          "email",
+          "loginId",
+          "name",
+          "password",
+          "surename"
+        ],
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "surename": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "getHash": {
+            "type": "boolean"
+          }
+        },
+        "description": "usuario de sistema."
+      },
+      "Curso": {
+        "required": [
+          "anioDictado",
+          "duracion",
+          "tema"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tema": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "anioDictado": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "duracion": {
+            "type": "integer"
+          }
+        },
+        "description": "Representa un curso."
+      },
+      "CursoAlumno": {
+        "required": [
+          "_id",
+          "alumnoId",
+          "cursoId",
+          "nombre",
+          "nota"
+        ],
+        "type": "object",
+        "properties": {
+          "cursoId": {
+            "type": "string"
+          },
+          "alumno": {
+            "$ref": "#/components/schemas/CursoAlumno_alumno"
+          }
+        },
+        "description": "Registro asociacion alumno-curso"
+      },
+      "Alumno": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "apellido": {
+            "type": "string"
+          },
+          "dni": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "direccion": {
+            "type": "string"
+          }
+        }
+      },
+      "addAlumno_cursoId_body": {
+        "type": "object",
+        "properties": {
+          "alumnoId": {
+            "type": "string",
+            "description": "Id de alumno a agregar"
+          }
+        }
+      },
+      "deleteAlumno_cursoId_body": {
+        "type": "object",
+        "properties": {
+          "alumnoId": {
+            "type": "string",
+            "description": "Id de alumno a agregar"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "cursoId": {
+            "type": "string"
+          },
+          "alumnoId": {
+            "type": "string"
+          }
+        }
+      },
+      "CursoAlumno_alumno": {
+        "type": "object",
+        "properties": {
+          "alumnoId": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre en formato nombre, apellido"
+          },
+          "nota": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}
